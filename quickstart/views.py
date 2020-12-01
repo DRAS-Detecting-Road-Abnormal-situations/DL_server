@@ -1,0 +1,111 @@
+from django.shortcuts import render
+from django.contrib.auth.models import User, Group
+#from rest_framework.decorators import action
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import viewsets,status,generics
+from .serializers import UserSerializer, GroupSerializer
+#from .serializers import InferenceSerializer
+from .models import Inference, ImageData
+#from celery.result import AsyncResult
+from django.views import View
+from django.http import HttpResponse, JsonResponse
+import cv2
+import os
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+"""class InferenceViewSet(viewsets.ModelViewSet):
+    serializer_class = InferenceSerializer
+    queryset = Inference.objects.all()
+    
+    @api_view(['GET'])   
+    def monitor_inference_progress(self,request,slug):
+        inference_obj = self.get_object()
+        progress = 100
+        result  = AsyncResult(inference_obj.task_id)
+        if isinstance(result.info, dict):
+            progress  = result.info['progress']
+        description = result.state
+        return Response({'progress':progress,'description':description},status=status.HTTP_200_OK)"""
+
+import js2py
+# 동영상을 주기적으로 계속 감시, init으로 넣어야 되나..
+#select는 주기적으로 
+def detect_situation(request):
+    #js2py.translate_file('send.js', 'send.py')
+    #select(video_path, image)
+    # send_image(path, image)
+    print('send')
+    return render(request, 'quickstart/basic.html')
+
+def select(video_path,case):
+    image_list = os.listdir(video_path)
+    frame_num = int(image_list[0][:-4])
+    delte_num = frame_num
+
+    for i in range(len(image_list)):
+        frame_name = int(image_list[i][:-4])
+        if(frame_num != frame_name):
+            print(frame_num,frame_name)
+            for j in range(delte_num+1, frame_num):
+                delte_image(video_path, j)
+            image = cv2.imread(video_path+str(delte_num)+'.png')
+            form = ImageData(case=case, image = image)
+            form.save()
+            detect_situation()#여기 알림보내는 코드 부르기
+            delte_image(video_path, delte_num)#delte_num은 알람을 보내고 삭제하기
+            frame_num=frame_name
+            delte_num = frame_name
+        frame_num+= 1
+    print(delte_num, frame_num)
+    for j in range(delte_num+1, frame_num):
+        delte_image(video_path, j)
+    image = cv2.imread(video_path+str(delte_num)+'.png')
+    form = ImageData(case=case, image = image)
+    form.save()
+    detect_situation()#여기 알림보내는 코드 부르기
+    delte_image(video_path, delte_num)#delte_num은 알람을 보내고 삭제하기
+
+def delte_image(image_path, image_name):
+    image_file = image_path+str(image_name)+'.png'
+    if os.path.isfile(image_file):
+        os.remove(image_file)
+
+@csrf_exempt
+def sample(request):
+    """image = [cv2.imread("C:/Users/w1004/Documents/GitHub/iceboat/tutorial/quickstart/templates/quickstart/79.png")]
+    form = ImageData(case = "accident", image = image)
+    form.save()
+    send_data = ImageData.objects.all() 
+    context = {'image' : send_data}"""
+    return render(request,'sample.html')
+
+from .push_fcm_notification import *
+from django.apps import AppConfig
+
+import time
+
+def start(request):
+    set_action()
+    return render(request,'quickstart/start.html')
+
+def set_action():
+    send_to_token()
+    print('start!')
+    while(True):
+        try:
+            while(True):
+                import quickstart.main
+                app.run(main)
+        except SystemExit:
+            pass
