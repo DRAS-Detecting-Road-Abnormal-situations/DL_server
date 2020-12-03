@@ -84,23 +84,25 @@ def main(_argv):
         #print(fps, scores)
         print("FPS: {:.2f}".format(fps))
         #img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
-        img = cv2.putText(img, "FPS: {:.2f}".format(fps), (0, 30),
-                          cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 2)
+        # img = cv2.putText(img, "FPS: {:.2f}".format(fps), (0, 30),
+        #                   cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 2)
         log = "False"
         
         if scores[0][0] > 0.7 and log_1 == "True":
             log = "True"
-            name = FLAGS.output + 'output' + str(num) + '.jpg'
+            # name = 'output' + str(num) + '.jpg'
+            name = 'output' + str(num) + '.png'
+            imagename = 'output' + str(num)
             print('---------'+name)
-            cv2.imwrite(FLAGS.output + 'output' + str(num) + '.jpg', img)
+            cv2.imwrite(FLAGS.output + 'output' + str(num) + '.png', img)
             print(log)
-            print('output saved to: {}'.format(FLAGS.output + 'output' + str(num) + '.jpg'))
+            print('output saved to: {}'.format(FLAGS.output + 'output' + str(num) + '.png'))
+            print("A traffic accident has occurred.")
             num = num + 1
-            if num > 4: 
-                num = 1
             log_1 = "False"
-            image_url = 'C:/workspace/yolov3/yolov3_object_detections'+ str(name)
-            send_post(image_url,name)
+            #image_url에는 자신의 경로 + '/output/' + str(name)
+            image_url = 'C:/Users/김효민/Documents/Github/yolo_server_flask'+ '/output/' + str(name)
+            send_post(image_url,imagename)
         else :
             log = "False"
             print(log)
@@ -132,18 +134,19 @@ def send_to_firebase_cloud_messaging(url,type):
         token=registration_token,
         data={'case':'accidnet', 'cctv_id':'서울역'},
         )
+
 def send_post(image_url, image_name):
-    url = "http://127.0.0.1:8000/push_server/image/"
+    url = "http://chaeyoung.pythonanywhere.com/push_server/image/"
     files = {
         'image': open(image_url, 'rb')
         }
     data = {
-        'name' : image_name
+        'name' : image_name,
+        'type' : 'acc',
+
     }
     response = requests.request("POST", url, files=files, data = data)
     print(response)
-    # Response is a message ID string.
-    print('Successfully sent message:', response)
 
 if __name__ == '__main__':
     try:
