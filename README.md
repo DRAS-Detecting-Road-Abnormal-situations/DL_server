@@ -46,6 +46,18 @@ python load_weights.py
 # yolov3-tiny
 python load_weights.py --weights ./weights/yolov3-tiny.weights --output ./weights/yolov3-tiny.tf --tiny
 ```
+### 사고 영상 실행
+'detect_video.py'파일을 통해 실행 가능하다.
+```bash
+명령어 python detect_video.py --video data/video/car_accident.mp4
+```
+data/video/ 폴더 안에 있는 mp4파일들로 실행가능하다.
+![캡처](https://user-images.githubusercontent.com/64147798/105882257-ca20ef80-6048-11eb-8b58-946c28d23e43.PNG)
+![캡처1](https://user-images.githubusercontent.com/64147798/105882306-d73dde80-6048-11eb-99c1-79ba8e72cce8.PNG)
+
+#### 사고 감지 시 이미지 저장
+\output 폴더 안에 사고 감지 시 이미지가 저장된다.
+
 
 ## Acknowledgments
 * [Yolov3 Object Detection with Flask and Tensorflow 2.0](https://github.com/theAIGuysCode/Object-Detection-API)
