@@ -20,7 +20,7 @@ flags.DEFINE_string('video', './data/video/test_1.mp4',
 flags.DEFINE_string('output', './output/', 'path to output video')
 flags.DEFINE_string('output_format', 'XVID', 'codec used in VideoWriter when saving video to file')
 flags.DEFINE_integer('num_classes', 1, 'number of classes in the model')
-
+import time
 
 def main(_argv):
    
@@ -89,19 +89,21 @@ def main(_argv):
         log = "False"
         
         if scores[0][0] > 0.7 and log_1 == "True":
+            now = time.localtime()
+            n = "%04d_%02d_%02d_%02d_%02d_%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
             log = "True"
             # name = 'output' + str(num) + '.jpg'
-            name = 'output' + str(num) + '.png'
-            imagename = 'output' + str(num)
+            name = 'output' + str(n) + '.png'
+            imagename = 'output' + str(n)
             print('---------'+name)
-            cv2.imwrite(FLAGS.output + 'output' + str(num) + '.png', img)
+            cv2.imwrite(FLAGS.output + 'output' + str(n) + '.png', img)
             print(log)
-            print('output saved to: {}'.format(FLAGS.output + 'output' + str(num) + '.png'))
+            print('output saved to: {}'.format(FLAGS.output + 'output' + str(n) + '.png'))
             print("A traffic accident has occurred.")
             num = num + 1
             log_1 = "False"
             #image_url에는 자신의 경로 + '/output/' + str(name)
-            image_url = 'C:/Users/김효민/Documents/Github/yolo_server_flask'+ '/output/' + str(name)
+            image_url = 'C:/Users/user/OneDrive - 한국외국어대학교/문서/GitHub/Yolo-server/output/' + str(name)
             send_post(image_url,imagename)
         else :
             log = "False"
