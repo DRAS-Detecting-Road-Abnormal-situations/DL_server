@@ -2,45 +2,20 @@ createsuperuser
 ID : iceboat
 password : 1234
 
-## 가상 환경 켜기
-python3 -m venv env
+### Setting
+1.  가상 환경 켜기
+```python3 -m venv env
 source venv/Scripts/activate  # On Windows use `env\Scripts\activate`
 venv_yolo\Scripts\activate
-
-## restframework 다운
+```
+2.  restframework 다운
+```
 pip install django
 pip install djangorestframework
+```
 
-# 파이썬 버전 낮추기
-commend 에서 virtualenv 자기 가상환경이른 --python=python버전 하기
-
-# keras 로 darknet 바꾸기 (참고 https://github.com/qqwweee/keras-yolo3)
-curl -o yolo.weights https://pjreddie.com/media/files/yolov3.weights
-python convert.py yolov3.cfg yolov3.weights model_data/yolov3.h5
-
-python convert.py yolov4.cfg yolov4.weights model_data/yolov4.h5
-- 이때 convert.py랑 yolov3.cfg 필요
-
-python yolo_video.py [OPTIONS...] --image, for image detection mode, OR
-python yolo_video.py [video_path] [output_path (optional)]
-
-yolo_anchor -  임이의 박스 크기 (여기서 정한)
-
-python yolo_video.py --image : 사진 입력을 받음 -> BMP으로 결과 나옴 -> .save 저장하게 만듦 -> result에 결과 저장 (날짜, 시간순으로)
-- yolo.h5 model, anchors and classes loaded 필요
-
-## yolo 서버의 restframework 
-https://medium.com/@chamakhabdallah8/how-to-deploy-a-keras-model-to-production-with-django-drf-celery-and-redis-df4901014355 
-
-
-### 이미지 전송 restful
-- https://yongwookha.github.io/ETC/2020-07-22-django-rest-api-framework
-- https://eunjin3786.tistory.com/133
-- https://itinerant.tistory.com/134?category=736038 => basic.html
-- https://bourbonkk.tistory.com/69 => send_post.html
-
-### js 실행시키기
-- https://iamaman.tistory.com/2058
+### 파이썬 버전 낮추기
+commend 에서 virtualenv 자기 가상환경이른 `--python=python버전` 하기
 
 ### 이미지 전송 시나리오
 - python manage.py runserver 127.0.0.1:8008 실행
@@ -52,6 +27,37 @@ https://medium.com/@chamakhabdallah8/how-to-deploy-a-keras-model-to-production-w
 
 ### 장고 시작시 실행할 코드 작성
 - http://blog.quantylab.com/django_onstartup.html -> python manage.py runserver --noreload
+
+### keras 로 darknet 바꾸기 
+```
+curl -o yolo.weights https://pjreddie.com/media/files/yolov3.weights
+python convert.py yolov3.cfg yolov3.weights model_data/yolov3.h5
+python convert.py yolov4.cfg yolov4.weights model_data/yolov4.h5
+```
+- 이때 convert.py랑 yolov3.cfg 필요
+```
+python yolo_video.py [OPTIONS...] --image, for image detection mode, OR
+python yolo_video.py [video_path] [output_path (optional)]
+```
+- yolo_anchor -  임이의 박스 크기 (여기서 정한)
+- 동작
+    - `python yolo_video.py --image` : 사진 입력을 받음 -> BMP으로 결과 나옴 -> .save 저장하게 만듦 -> result에 결과 저장 (날짜, 시간순으로)
+- yolo.h5 model, anchors and classes loaded 필요
+
+### 참고사이트
+- keras TO darknet:
+    - [https://github.com/qqwweee/keras-yolo3]
+- yolo 서버의 restframework :
+    - [https://medium.com/@chamakhabdallah8/how-to-deploy-a-keras-model-to-production-with-django-drf-celery-and-redis-df4901014355]
+- 이미지 전송 restful : 
+    - [https://yongwookha.github.io/ETC/2020-07-22-django-rest-api-framework]
+    - [https://eunjin3786.tistory.com/133]
+    - [https://itinerant.tistory.com/134?category=736038] => basic.html
+    - [https://bourbonkk.tistory.com/69] => send_post.html
+- js 실행시키기
+    - https://iamaman.tistory.com/2058
+
+
 
 ### 푸시알람 + 이미지전송 post 해야되는 순서
 - [X] 1. push 알람 data에 title, body, cctv_id(해당 지역만 알람 보여주기 위해서), image_name사진 이름(현재 시간), 
