@@ -4,4 +4,4 @@
     - github 링크: https://github.com/DRAS-Detecting-Road-Abnormal-situations/DL_server/blob/Hm-source-b1
 
     ## 장애물 감지 server - Django
-    - github 링크: https://github.com/swiceboat/yolo_server/tree/cheayoung
+    - github 링크: https://github.com/DRAS-Detecting-Road-Abnormal-situations/DL_server/blob/cheayoung
